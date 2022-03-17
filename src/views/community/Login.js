@@ -25,11 +25,6 @@ function Login() {
         });
     };
 
-    const getLogout = () => {
-        localStorage.removeItem("accessToken");
-        window.location.reload();
-    }
-
     return (
         <>
             <LoginBox>

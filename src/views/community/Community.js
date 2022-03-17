@@ -3,15 +3,18 @@ import styled from "styled-components/macro";
 import TopicBox from "./main/TopicBox";
 import UserBox from "./main/UserBox";
 
-function Community(check) {
+function Community() {
 
     return (
-        <div>
-            {check ? <div>로그인댐</div>:<div>로그인안댐</div>}
+        <SiteView>
             <UserBox/>
             <TopicBox/>
-        </div>
+        </SiteView>
     )
 }
 
 export default Community;
+
+const SiteView = styled.div`
+display: flex;
+`

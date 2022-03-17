@@ -4,17 +4,41 @@ import styled from "styled-components/macro";
 
 function Post() {
 
-    const [post, setPost] = useState({title:"", content:"", board:""});
+    const [post, setPost] = useState({ title: "", content: "", topic: "" });
+
+    const [topics, setTopics] = useState([]);
+
+    useEffect(() => {
+        async function refresh() {
+            const data = await Promise.resolve(getTopics());
+            setTopics(data.data);
+        }
+        refresh();
+    }, []);
+
+    const getTopics = async () => {
+        return await axios.get(`http://localhost:8080/api/topic/getAll`);
+    };
 
     const getPost = () => {
-        // console.log(login);
-        axios.post('http://localhost:8080/api/article/post', {
-            title: post.title,
-            content: post.content,
-            topic: post.topic,
-        }).then((res) => {
-            console.log(res);
-        });
+        console.log(post.topic);
+        if (post.title === "") {
+            alert("제목을 적어주세요");
+        } else if (post.content === "") {
+            alert("내용을 적어주세요")
+        } else if (post.topic === "" || post.topic === "default"){
+            alert("주제를 선택")
+        }
+        else {
+            axios.post('http://localhost:8080/api/article/post', {
+                title: post.title,
+                content: post.content,
+                topic: post.topic,
+            }).then((res) => {
+                console.log(res);
+                window.location.replace("/community");
+            });
+        }
     };
 
     return (
@@ -37,12 +61,21 @@ function Post() {
                 />
                 <br />
                 카테고리:{' '}
-                <input
-                    value={post.topic || ""}
+                <select
+                    value={post.topic}
                     onChange={(e) => {
                         setPost({ ...post, topic: e.target.value });
                     }}
-                />
+                >
+                    <option value="default"> -- TOPIC -- </option>
+                    {topics.map((topic, idx) => (
+                        <option value={topic.url} key={idx}>{topic.title}</option>
+                    ))}
+                    {/* <option value={"free"}>자유</option>
+                    <option value={"game"}>게임</option>
+                    <option value={"stock"}>주식·투자</option> */
+                    }
+                </select>
                 <br />
             </div>
             <button onClick={getPost}>등록</button>

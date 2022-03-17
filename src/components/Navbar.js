@@ -2,6 +2,7 @@ import React, { useState, useEffect, } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import styled, {css} from "styled-components/macro";
+import UserBox from "../views/community/main/UserBox";
 
 const Navbar = () => {
 
@@ -15,6 +16,7 @@ const Navbar = () => {
                 <Box to="/community">커뮤니티</Box>
                 <Box to="/">상담문의</Box>
             </Menu>
+            {/* <UserBox></UserBox> */}
         </Nav>
     )
 }
