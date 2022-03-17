@@ -15,6 +15,7 @@ function Register() {
         }).then((res) => {
             console.log(res.data.token)
             console.log("회원가입 성공!!!!");
+            window.location.replace("/community");
         });
     };
 
