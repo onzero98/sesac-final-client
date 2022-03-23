@@ -1,16 +1,17 @@
-import React, { useState, useEffect, } from "react";
+import React, { useState, useEffect,useLayoutEffect } from "react";
 import axios from "axios";
 import styled, { css } from "styled-components/macro";
-import { Link } from "react-router-dom";
 import loginCheck from "../../utils/loginCheck";
+import moment from "moment";
+import 'moment/locale/ko'
 
 function Comment() {
 
     // /article/ 제거한 param 값
-    const id = window.location.pathname.substring(9);
+    const id = window.location.pathname.substring(19);
 
     const [comments, setComments] = useState([]);
-    const [post, setPost] = useState([]);
+    const [post, setPost] = useState({content:"",});
 
     useEffect(() => {
         async function refresh() {
@@ -29,68 +30,90 @@ function Comment() {
         const check = await loginCheck();
 
         if(check === false){
-            // window.location.replace("/community");
             alert("로그인이 필요한 기능입니다.");
         }
 
-        axios.post('http://localhost:8080/api/comment/post', {
-            articleid: id,
-            content: post.content,
-        }).then((res) => {
-            console.log(res);
-            window.location.reload();
-        });
+        if(post.content === ""){
+            alert("내용을 입력하세요.")
+        } else {
+            axios.post('http://localhost:8080/api/comment/post', {
+                articleid: id,
+                content: post.content,
+            }).then((res) => {
+                console.log(res);
+                window.location.reload();
+            });
+        }
     };
 
     const handleKeyPress = e => {if(e.key === 'Enter') {getPost();}}
 
     return (
-        <div>
-            <div>
+        <Display>
+            {comments.map((comment, idx) => (
+                <CommentBox key={idx}>
+                    <div>
+                        {comment.nickname}　
+                        {moment(comment.createdAt).format("YYYY.MM.D. HH:mm:ss")}
+                    </div>
+                    <div>{comment.content}</div>
+                </CommentBox>
+            ))}
+            <Post>
                 <InputBox
                     value={post.content || ""}
-                    placeholder={"댓글을 입력해"}
+                    placeholder={"댓글을 입력해주세요."}
                     onChange={(e) => {
                         setPost({ ...post, content: e.target.value });
                     }}
                     onKeyPress={handleKeyPress}
                 />
-                <Button onClick={getPost}>댓글 작성</Button>
-            </div>
-            <div>
-                {comments.map((comment, idx) => (
-                    <CommentBox>
-                        <div>{comment.nickname}</div>
-                        <div>{comment.content}</div>
-                        <div>{comment.createdAt}</div>
-                    </CommentBox>
-                ))}
-            </div>
-        </div>
-
+                <Button onClick={getPost}>등록</Button>
+            </Post>
+        </Display>
     )
-
 }
 
 export default Comment
 
+const Display = styled.div`
+margin-left: 20px;
+margin-bottom: 20px;
+/* background-color: #f1f3f4; */
+`
+
+const Post = styled.div`
+display: flex;
+`
+
 const InputBox = styled.input`
 padding: 0 5px;
-margin-bottom: 3px;
-height: 30px;
+height: 60px;
+width: 88%;
 border: 1px solid rgba(0,0,0,0.15);
 outline: none;
 `
 
-const Button = styled.button`
-border: none;
-padding: 6px 10px;
-font-size: 15px;
+const Button = styled.div`
+text-align: center;
+line-height: 60px;
+border: 1px solid rgba(0,0,0,0);
+border-radius: 3px;
+padding: 0 5px;
+margin-left: 5px;
+height: 60px;
+width: 9%;
+font-size: 20px;
+font-weight: bold;
 color: #fff;
+cursor: pointer;
 background-color: #0078ff;
 `
 
 const CommentBox = styled.div`
-border: 1px solid red;
+border: 1px solid rgba(0,0,0,0.15);
 margin-bottom: 5px;
+:first-child{
+    margin-top: 10px;
+}
 `

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, } from "react";
+import React, { useState, useEffect,useLayoutEffect } from "react";
 import axios from "axios";
 import styled, {css} from "styled-components/macro";
 import { Link } from "react-router-dom";
@@ -7,14 +7,14 @@ function MyPage() {
 
     const [userProfile, setUserProfile] = useState([]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         async function refresh() {
 
             const { data } = await Promise.resolve(getProfile());
 
             setUserProfile({
-                nickname: data.result.nickname,
-                points: data.result.points,
+                nickname: data.nickname,
+                points: data.points,
             })
         }
         refresh();
@@ -23,11 +23,6 @@ function MyPage() {
     const getProfile = async () => {
         return await axios.get("http://localhost:8080/api/user/userinfo");
     };
-
-    const getLogout = () => {
-        localStorage.removeItem("accessToken");
-        window.location.reload();
-    }
 
     return (
         <>
@@ -39,7 +34,6 @@ function MyPage() {
                 <ButtonAlign>
                     <Line />
                     <PostButton to={"/post"}>글쓰기</PostButton>
-                    <Button onClick={getLogout}>로그아웃</Button>
                 </ButtonAlign>
             </MyBox>
         </>
@@ -49,10 +43,14 @@ function MyPage() {
 export default MyPage;
 
 const MyBox = styled.div`
+margin: auto;
+margin-top: 24px;
 max-width: 200px;
 min-height: 140px;
 width: 100%;
-border: 1px solid red;
+/* border: 1px solid red; */
+font-size: large;
+font-family: 'IBM Plex Sans KR', sans-serif;
 `
 
 const InfosAlign = styled.div`
@@ -62,11 +60,13 @@ margin-top: 11px;
 `
 
 const InfoNickname = styled.span`
+
 `
 
 const InfoPoints = styled.span`
 color: #e91b23;
 font-weight: bold;
+
 `
 
 const ButtonAlign = styled.div`

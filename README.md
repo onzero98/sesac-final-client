@@ -6,6 +6,8 @@ npm start
 npm install react-router-dom
 npm install styled-components
 npm install axios
+npm install react-icons --save
+npm install moment
 
 ## 설정
 ### MySQL

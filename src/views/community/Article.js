@@ -1,30 +1,42 @@
-import React, { useState, useEffect, } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import axios from "axios";
 import styled, { css } from "styled-components/macro";
-import { Link } from "react-router-dom";
 import Comment from "./Comment";
-import UserBox from "./main/UserBox";
+import moment from "moment";
+import 'moment/locale/ko'
 
 function Article() {
 
     // /article/ 제거한 param 값
-    const id = window.location.pathname.substring(9);
+    const id = window.location.pathname.substring(19);
 
     const [contents, setContents] = useState([]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         async function refresh() {
             const { data } = await Promise.resolve(getData());
 
             setContents({
-                topic: data.topic,
+                tags: data.tags,
                 title: data.title,
                 content: data.content,
                 nickname: data.nickname,
+                view: data.view,
                 createdAt: data.createdAt,
             })
+
+            // 조회수 증가
+            axios.post('http://localhost:8080/api/article/vcount', {
+                id: id,
+            });
+            axios.post('http://localhost:8080/api/article/totalComments', {
+                id: id,
+            }).then((res)=>{
+                console.log(res);
+            });
         }
         refresh();
+
     }, []);
 
 
@@ -33,25 +45,55 @@ function Article() {
     };
 
     return (
-        <div>
+        <SiteView>
             <ArticleInfo>
-                생성일: {contents.createdAt}
-                <br />
-                카테고리: {contents.topic}
-                <br />
-                제목: {contents.title}
-                <br />
-                내용: {contents.content}
-                <br />
-                작성자: {contents.nickname}
+                <Title>{contents.title}</Title>
+                <UnderTitle>
+                    {contents.nickname}
+                    <View>
+                        {moment(contents.createdAt).format("YYYY.MM.D. HH:mm:ss")}　
+                        조회 {contents.view}
+                    </View>
+                </UnderTitle>
+                <ContentBox>{contents.content}</ContentBox>
             </ArticleInfo>
             <Comment />
-        </div>
+        </SiteView>
     )
 }
 
 export default Article;
 
-const ArticleInfo = styled.div`
+const SiteView = styled.div`
+margin-top: 15px;
+margin-left: 15px;
+font-size: large;
+font-family: 'IBM Plex Sans KR', sans-serif;
+/* display: flex; */
 
+`
+
+const ArticleInfo = styled.div`
+margin-left: 20px;
+min-width: 1100px;
+/* background-color: yellow; */
+`
+
+const Title = styled.div`
+font-size: 40px;
+font-weight: bold;
+
+`
+
+const UnderTitle = styled.div`
+
+`
+
+const ContentBox = styled.div`
+margin-top: 30px;
+min-height: 200px;
+`
+
+const View = styled.span`
+margin-left: 800px;
 `

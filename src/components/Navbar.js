@@ -2,7 +2,7 @@ import React, { useState, useEffect, } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import styled, {css} from "styled-components/macro";
-import UserBox from "../views/community/main/UserBox";
+import UserLogin from "./UserLogin";
 
 const Navbar = () => {
 
@@ -12,11 +12,11 @@ const Navbar = () => {
                 <h1>Monkeystock</h1>
             </Logo>
             <Menu>
-                <Box to="/">모의투자</Box>
-                <Box to="/community">커뮤니티</Box>
-                <Box to="/">상담문의</Box>
+                <Box reloadDocument to="/stock">모의투자</Box>
+                <Box reloadDocument to="/community">커뮤니티</Box>
+                <Box reloadDocument to="/chatbot">상담문의</Box>
             </Menu>
-            {/* <UserBox></UserBox> */}
+            <UserLogin/>
         </Nav>
     )
 }
@@ -34,7 +34,7 @@ background-color: #0c151c; // 메인 남색
 -webkit-user-select:none;
 -moz-user-select:none;
 -ms-user-select:none;
-user-select:none
+user-select:none;
 `
 
 const Logo = styled.div`
@@ -62,7 +62,12 @@ transition: 0.2s ease-in-out;
 `
 
 const Box = styled(Link)`
+font-family: 'IBM Plex Sans KR', sans-serif;
+font-size: large;
 text-decoration: none;
 color: #0078ff;
 ${BoxStyle}
+&:last-child{
+    margin-right: 100px;
+}
 `

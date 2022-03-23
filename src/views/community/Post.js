@@ -4,7 +4,7 @@ import styled from "styled-components/macro";
 
 function Post() {
 
-    const [post, setPost] = useState({ title: "", content: "", topic: "" });
+    const [post, setPost] = useState({ title: "", content: "", tags: "" });
 
     const [topics, setTopics] = useState([]);
 
@@ -21,19 +21,19 @@ function Post() {
     };
 
     const getPost = () => {
-        console.log(post.topic);
+        console.log(post);
         if (post.title === "") {
             alert("제목을 적어주세요");
         } else if (post.content === "") {
             alert("내용을 적어주세요")
-        } else if (post.topic === "" || post.topic === "default"){
+        } else if (post.tags === "" || post.tags === "default"){
             alert("주제를 선택")
         }
         else {
             axios.post('http://localhost:8080/api/article/post', {
                 title: post.title,
                 content: post.content,
-                topic: post.topic,
+                tags: post.tags,
             }).then((res) => {
                 console.log(res);
                 window.location.replace("/community");
@@ -62,14 +62,14 @@ function Post() {
                 <br />
                 카테고리:{' '}
                 <select
-                    value={post.topic}
+                    value={post.tags}
                     onChange={(e) => {
-                        setPost({ ...post, topic: e.target.value });
+                        setPost({ ...post, tags: e.target.value });
                     }}
                 >
                     <option value="default"> -- TOPIC -- </option>
                     {topics.map((topic, idx) => (
-                        <option value={topic.url} key={idx}>{topic.title}</option>
+                        <option value={topic.url} key={idx}>{topic.tags}</option>
                     ))}
                     {/* <option value={"free"}>자유</option>
                     <option value={"game"}>게임</option>
