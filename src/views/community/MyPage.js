@@ -14,7 +14,7 @@ function MyPage() {
 
             setUserProfile({
                 nickname: data.nickname,
-                points: data.points,
+                points: data.points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','),
             })
         }
         refresh();

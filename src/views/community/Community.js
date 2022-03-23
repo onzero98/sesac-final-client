@@ -23,19 +23,11 @@ width: 100%;
 background-color: #f1f3f4;
 `
 
-const LeftSide = styled.div`
-border: 1px solid #cacdd1;
-text-align: center;
-justify-content: center;
-min-width: 200px;
-min-height: 100vh;
-background-color: #f1f3f4;
-`
-
 const RightSide = styled.div`
 margin-top: 10px;
 margin-left: 10px;
-width: 1280px;
+min-width: 1280px;
+max-width: 1280px;
 /* border: 1px solid black; */
 /* width: 70vw; */
 /* height: 100%; */

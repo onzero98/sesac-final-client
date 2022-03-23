@@ -91,6 +91,7 @@ border-bottom: 1px solid rgba(0,0,0,0.1);
 `
 
 const Box = styled.div`
+display: block;
 margin: 5px 5px;
 min-width: 300px;
 max-width: 300px;
