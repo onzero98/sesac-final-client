@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
-import { Route, Link } from "react-router-dom";
+import React, { useState, useLayoutEffect } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
-import styled, { css } from "styled-components/macro";
+import styled from "styled-components/macro";
 
 const TopicBox = () => {
 
@@ -11,7 +11,7 @@ const TopicBox = () => {
     // 전체 게시글 불러오기
     useLayoutEffect(() => {
         async function refresh() {
-            const { data } = await axios.get("http://localhost:8080/api/article/readAll");
+            const { data } = await axios.get("http://localhost:8080/api/v1/article/tags/all");
             setTotals(data);
         }
         refresh();
@@ -22,10 +22,10 @@ const TopicBox = () => {
         async function refresh() {
             var orderBy = [];
 
-            const { data } = await axios.get("http://localhost:8080/api/topic/getAll");
+            const { data } = await axios.get("http://localhost:8080/api/v1/topic");
 
             for(var i in data){
-                var title = await axios.get(`http://localhost:8080/api/article/readByTags/${data[i].url}`);
+                var title = await axios.get(`http://localhost:8080/api/v1/article/tags/${data[i].tags}`);
                 orderBy.push(title.data);
             }
             SetTagsTitle(orderBy);
@@ -40,7 +40,6 @@ const TopicBox = () => {
                 {totals.map((res, idx) => (
                     <Title key={idx}>
                         <NavTitle to={`/community/article/${res.id}`}>
-                            
                             {res.title}
                         </NavTitle>
                     </Title>
@@ -84,6 +83,8 @@ margin-left: 10px;
 
 const Title = styled.div`
 margin: 20px;
+overflow: hidden;
+height: 28px;
 border-bottom: 1px solid rgba(0,0,0,0.1);
 :hover{
     border-bottom: 1px solid rgba(0,0,0,0.3);
@@ -100,6 +101,7 @@ max-height: 350px;
 background-color: white;
 border-radius: 5px;
 border: 1px solid rgba(0,0,0,0.1);
+
 :hover{
     border: 1px solid #99aef4;
   }

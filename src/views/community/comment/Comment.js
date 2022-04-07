@@ -1,7 +1,7 @@
 import React, { useState, useEffect,useLayoutEffect } from "react";
 import axios from "axios";
 import styled, { css } from "styled-components/macro";
-import loginCheck from "../../utils/loginCheck";
+import loginCheck from "../../../utils/loginCheck";
 import moment from "moment";
 import 'moment/locale/ko'
 
@@ -50,6 +50,8 @@ function Comment() {
 
     return (
         <Display>
+            <Line/>
+            <Title>댓글</Title>
             {comments.map((comment, idx) => (
                 <CommentBox key={idx}>
                     <div>
@@ -82,6 +84,18 @@ margin-bottom: 20px;
 /* background-color: #f1f3f4; */
 `
 
+const Line = styled.hr`
+/* width: 90%; */
+border: 0px;
+height: 1px;
+background-color: rgba(0,0,0,0.15);
+/* margin: 20px 0; */
+`
+
+const Title = styled.h2`
+font-size: 20px;
+`
+
 const Post = styled.div`
 display: flex;
 `
@@ -111,6 +125,8 @@ background-color: #0078ff;
 `
 
 const CommentBox = styled.div`
+/* box-sizing: border-box; */
+padding: 5px 5px;
 border: 1px solid rgba(0,0,0,0.15);
 margin-bottom: 5px;
 :first-child{

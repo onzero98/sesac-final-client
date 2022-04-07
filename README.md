@@ -9,8 +9,13 @@ npm install axios
 npm install react-icons --save
 npm install moment
 
-## 설정
-### MySQL
+npm install --save @ckeditor/ckeditor5-react @ckeditor/ckeditor5-build-classic
+npm install html-react-parser
+## 사용 폰트
 
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';
-FLUSH PRIVILEGES;users
+###
+font-family: 'IBM Plex Sans KR', sans-serif;
+font-size: large;
+
+###
+font-family: 'Rajdhani', sans-serif;

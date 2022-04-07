@@ -1,6 +1,6 @@
 import React, { useState, useEffect, } from "react";
 import styled from "styled-components/macro";
-import TopicBox from "./boxs/TopicBox";
+import TopicBox from "./article/TopicBox";
 import { Link } from "react-router-dom";
 
 function Community() {
@@ -20,7 +20,7 @@ const SiteView = styled.div`
 display: flex;
 width: 100%;
 /* height: 100%; */
-background-color: #f1f3f4;
+background-color: #FCFCFC;
 `
 
 const RightSide = styled.div`

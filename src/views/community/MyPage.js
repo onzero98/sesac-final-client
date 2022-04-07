@@ -11,7 +11,7 @@ function MyPage() {
         async function refresh() {
 
             const { data } = await Promise.resolve(getProfile());
-
+            console.log(data);
             setUserProfile({
                 nickname: data.nickname,
                 points: data.points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','),
@@ -33,7 +33,7 @@ function MyPage() {
                 </InfosAlign>
                 <ButtonAlign>
                     <Line />
-                    <PostButton to={"/post"}>글쓰기</PostButton>
+                    <PostButton to={"/community/post"}>글쓰기</PostButton>
                 </ButtonAlign>
             </MyBox>
         </>
@@ -85,7 +85,11 @@ background-color: #0078ff;
 `
 
 const BoxStyle = css`
+position: absolute;
+left: 120px;
+top: 205px;
 border: none;
+border-radius: 5px;
 padding: 6px 10px;
 font-size: 15px;
 color: #fff;
@@ -93,7 +97,6 @@ background-color: #FF7800;;
 `
 
 const PostButton = styled(Link)`
-margin-right: 10px;
 text-decoration: none;
 ${BoxStyle}
 `

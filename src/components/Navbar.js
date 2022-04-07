@@ -14,7 +14,7 @@ const Navbar = () => {
             <Menu>
                 <Box reloadDocument to="/stock">모의투자</Box>
                 <Box reloadDocument to="/community">커뮤니티</Box>
-                <Box reloadDocument to="/chatbot">상담문의</Box>
+                {/* <Box reloadDocument to="/chatbot">상담문의</Box> */}
             </Menu>
             <UserLogin/>
         </Nav>
@@ -67,7 +67,7 @@ font-size: large;
 text-decoration: none;
 color: #0078ff;
 ${BoxStyle}
-&:last-child{
+/* &:last-child{
     margin-right: 100px;
-}
+} */
 `

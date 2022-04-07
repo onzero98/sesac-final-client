@@ -1,7 +1,7 @@
 import React, { useState, useEffect, } from "react";
 import axios from "axios";
 import styled, {css} from "styled-components/macro";
-import { Login } from "../views/community/Login";
+import { Login } from "../views/community/user/Login";
 import MyPage from "../views/community/MyPage";
 import loginCheck from "../utils/loginCheck";
 import { FaPowerOff } from "react-icons/fa";
@@ -15,7 +15,7 @@ function UserLogin()  {
             const data = await loginCheck();
 
             setIsLoggedin(data);
-            console.log(isLoggedin);
+            // console.log(isLoggedin);
         }
         refresh();
     }, [isLoggedin]);
@@ -23,12 +23,12 @@ function UserLogin()  {
     const openLogin = (e) => {
         if (e.target !== e.currentTarget) return;
         setShowLogin(true);
-        console.log(showLogin);
+        // console.log(showLogin);
     }
 
     const getLogout = () => {
         localStorage.removeItem("accessToken");
-        window.location.reload();
+        window.location.replace("/community");
     }
 
     return (
@@ -72,5 +72,6 @@ ${Power}
 const PowerButton = styled.button`
 background: none;
 border: none;
+cursor: pointer;
 `
 

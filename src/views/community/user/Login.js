@@ -30,8 +30,9 @@ export const Login = ({ showLogin, setShowLogin }) => {
             {showLogin ? (
                 <Background>
                     <LoginBox showLogin={showLogin}>
+                    <Button onClick={() => setShowLogin(false)}>X</Button>   
                         <Content>
-                            <Header>Login</Header>
+                            <Header>로그인</Header>
                             <InputBox
                                 value={login.userid || ""}
                                 placeholder={"ID"}
@@ -39,6 +40,7 @@ export const Login = ({ showLogin, setShowLogin }) => {
                                     setLogin({ ...login, userid: e.target.value });
                                 }}
                             />
+                            <br />
                             <InputBox
                                 value={login.password || ""}
                                 type={"password"}
@@ -47,11 +49,10 @@ export const Login = ({ showLogin, setShowLogin }) => {
                                     setLogin({ ...login, password: e.target.value });
                                 }}
                             />
+                            <br />
                             <LoginButton onClick={getLogin}>SIGN IN</LoginButton>
                             <Line />
                         </Content>
-                        <Button onClick={() => setShowLogin(false)}>닫기</Button>
-                        {/* <RegisterButton>회원가입</RegisterButton> */}
                     </LoginBox>
                 </Background>
             ) : null}
@@ -70,9 +71,11 @@ top: 0;
 display: flex;
 justify-content: center;
 align-items: center;
+z-index: 99;
+cursor: default;
 `
 const LoginBox = styled.div`
-width: 800px;
+width: 400px;
 height: 500px;
 box-shadow: 0 5px 10px rgba(0,0,0,0.2);
 background: #fff;
@@ -92,20 +95,14 @@ color: #141414;
 `
 
 const Header = styled.h1`
-font-family: 'Rajdhani', sans-serif;
-font-size: 4em;
+font-family: 'IBM Plex Sans KR', sans-serif;
+font-size: 45px;
 text-align:center;
-/* letter-spacing: 0.4rem; */
-/* margin-top: 11px; */
-`
-
-const Form = styled.div`
-
 `
 
 const InputBox = styled.input`
 font-size: large;
-font-family: 'Rajdhani', sans-serif;
+font-family: 'IBM Plex Sans KR', sans-serif;
 width:300px;
 height: 30px;
 display: block;
@@ -126,14 +123,20 @@ color: #fff;
 background-color: #0078ff;
 border: none;
 border-radius: 2px;
+cursor: pointer;
 `
 
 const Button = styled.button`
+position: absolute;
+right: 0;
 border: none;
+border-top-right-radius: 5px;
 padding: 6px 10px;
-font-size: 15px;
-color: #fff;
-background-color: #0078ff;
+font-size: 30px;
+font-weight: bold;
+background-color: white;
+color:  #0078ff;
+cursor: pointer;
 `
 
 const Line = styled.hr`

@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
-import { Link } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import axios from "axios";
 import MyPage from "./MyPage";
+import { Register } from "./user/Register";
 import styled, { css } from "styled-components/macro";
 import loginCheck from "../../utils/loginCheck";
+import Search from "./topic/Search";
 
 const LeftSideBar = () => {
 
+    const [showRegister, setShowRegister] = useState(false);
     const [isLoggedin, setIsLoggedin] = useState(false);
 
     useLayoutEffect(() => {
@@ -14,31 +17,39 @@ const LeftSideBar = () => {
             const data = await loginCheck();
 
             setIsLoggedin(data);
-            console.log(isLoggedin);
+            // console.log(isLoggedin);
         }
         refresh();
     }, [isLoggedin]);
 
+    const openRegister = (e) => {
+        if (e.target !== e.currentTarget) return;
+        setShowRegister(true);
+    }
+
     return (
+        <>
         <LeftSide>
             {
                 isLoggedin ?
-                    <MyPage /> :
-                    <LoginFirst>
+                <MyPage /> :
+                <LoginFirst>
                         <p>로그인이 필요합니다.</p>
                         <p>아직 계정이 없으신가요?</p>
-                        <RegisterLink to="/register">회원가입</RegisterLink>
+                        <RegisterButton onClick={openRegister}>회원가입
+                        <Register showRegister={showRegister} setShowRegister={setShowRegister}></Register>
+                        </RegisterButton>
                     </LoginFirst>
             }
             <Line />
             <Category>
-                <SearchBar type="text" placeholder={`게시글 검색...`} />
-                <Tags>전체</Tags>
-                <Tags>주식·투자</Tags>
-                <Tags>분석</Tags>
-                <Tags>자유</Tags>
+                <Tags to={{pathname: `/community/topic/`, search: `search=all`,}}>전체</Tags>
+                <Tags to={{pathname: `/community/topic/`, search: `search=주식·투자`,}}>주식·투자</Tags>
+                <Tags to={{pathname: `/community/topic/`, search: `search=분석`,}}>분석</Tags>
+                <Tags to={{pathname: `/community/topic/`, search: `search=자유`,}}>자유</Tags>
             </Category>
         </LeftSide>
+        </>
     )
 }
 
@@ -73,32 +84,33 @@ font-family: 'IBM Plex Sans KR', sans-serif;
 text-align: center;
 `
 
-const RegisterLink = styled(Link)`
+const RegisterButton = styled.div`
+margin: auto;
 color: #fff;
+width: 50%;
 padding: 4px 11px;
 border-radius: 10px;
 background-color: #000;
 text-decoration: none;
-`
-
-const SearchBar = styled.input`
-color: #757575;
-margin-top: 10px;
-border: none;
-border-radius: 5px;
-width: 90%;
-height: 30px;
-outline: none;
+-webkit-user-select:none;
+-moz-user-select:none;
+-ms-user-select:none;
+user-select:none;
+cursor: pointer;
 `
 
 const Category = styled.div`
-margin-left: 10px;
+margin-left: 5px;
 text-align: left;
 font-size: large;
 font-family: 'IBM Plex Sans KR', sans-serif;
 `
 
-const Tags = styled.p`
+const Tags = styled(Link)`
+color: black;
+display: block;
+text-decoration: none;
+padding: 10px 10px;
 margin-bottom: 5px;
 cursor: pointer;
 `
