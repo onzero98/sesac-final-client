@@ -39,11 +39,11 @@ const Search = () => {
         setPageNum(pageNum === max-1 ? 0 : pageNum => pageNum + 1);
         if(pageNum === max-1){
             setPageNum(max-1)
-            alert("더이상 없음");
+            alert("마지막 페이지");
         }
         if(max === 0){
             setPageNum(0);
-            alert("더이상 없음");
+            alert("마지막 페이지");
         }
     }
 

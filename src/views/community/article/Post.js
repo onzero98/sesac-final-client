@@ -116,6 +116,8 @@ const PostBox = styled.div`
 margin-top: 20px;
 margin-left: 20px;
 min-width: 1100px;
+max-width: 1100px;
+
 /* background-color: yellow; */
 `
 
