@@ -9,14 +9,14 @@ COPY ./package.json /client/package.json
 COPY ./package-lock.json /client/package-lock.json
 
 # 이미지 상에서 명령을 실행함
-RUN yarn install --ignore-engines
+RUN yarn
 
 # src 나 public 등 나머지 파일을 이후 설정파일 레이어 이후에 얹음
 COPY   ./public       /client/public
 COPY   ./src          /client/src
 
 # 빌드
-RUN npm run --script build
+RUN yarn build
 
 # 사실 nginx 로 빌드할 거임
 FROM nginx:alpine
