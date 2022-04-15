@@ -6,7 +6,6 @@ WORKDIR  /client
 
 # COPY 설정 파일 먼저 복사 ( 레이어 쌓기 )
 COPY ./package.json /client/package.json
-COPY ./package-lock.json /client/package-lock.json
 
 # 이미지 상에서 명령을 실행함
 RUN yarn
