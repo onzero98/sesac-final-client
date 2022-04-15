@@ -8,14 +8,14 @@ WORKDIR  /client
 COPY ./package.json /client/package.json
 
 # 이미지 상에서 명령을 실행함
-RUN yarn install --network-timeout=600000
+RUN sudo yarn install
 
 # src 나 public 등 나머지 파일을 이후 설정파일 레이어 이후에 얹음
 COPY   ./public       /client/public
 COPY   ./src          /client/src
 
 # 빌드
-RUN yarn build
+RUN sudo yarn build
 
 # 사실 nginx 로 빌드할 거임
 FROM nginx:alpine
