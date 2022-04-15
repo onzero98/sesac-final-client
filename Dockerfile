@@ -9,7 +9,6 @@ COPY ./package.json /client/package.json
 
 # 이미지 상에서 명령을 실행함
 RUN yarn cache clean
-RUN rm yarn.lock
 RUN rm - r node_modules
 RUN yarn install --network-timeout=600000
 
