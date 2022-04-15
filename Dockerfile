@@ -8,6 +8,8 @@ WORKDIR  /client
 COPY ./package.json /client/package.json
 
 # 이미지 상에서 명령을 실행함
+RUN npm config rm proxy
+RUN npm config rm https-proxy
 RUN yarn install --ignore-engines
 
 # src 나 public 등 나머지 파일을 이후 설정파일 레이어 이후에 얹음
