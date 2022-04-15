@@ -1,5 +1,5 @@
 # 베이스 이미지 사용
-FROM node:alpine as builder
+FROM node:16-alpine as builder
 
 # client 경로에서 작업할 것을 지정함
 WORKDIR  /client
@@ -16,7 +16,6 @@ COPY   ./public       /client/public
 COPY   ./src          /client/src
 
 # 빌드
-
 RUN yarn build
 
 # 사실 nginx 로 빌드할 거임
