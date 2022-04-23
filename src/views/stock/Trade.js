@@ -1,133 +1,132 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
+import axios from "axios";
 import styled from "styled-components/macro";
-import ShowStock from "./ShowStock";
+import OrderButton from "./OrderButton";
+import useStock from "../../utils/useStock";
 
-const Trade = () => {
+const Trade = ({ backAPI, num, setCompany }) => {
+    const compId = num;
 
-    const [order, setOrder] = useState("buy");
+    const { stockInfo, isLoading } = useStock();
+    const pfAPI = backAPI + "/account/portfolio";
+    const [pfs, setPfs] = useState([]);
+    const [pfList, setPfList] = useState([]);
 
-    const toggle_buy = () =>{
-        setOrder("buy");
-    }
+    useLayoutEffect(() => {
+        let isMounted = true;
+        getPfs(pfAPI)
+            .then((response) => response[0].data)
+            .then((data) => {
+                if (isMounted) {
+                    setPfs(data);
+                    setPfList(data.map((stock) => stock.stockInfo.ticker));
+                }
+            });
+        return () => {
+            isMounted = false;
+        };
+    }, [stockInfo]);
 
-    const toggle_sell = () =>{
-        setOrder("sell");
-    }
+    const getPfs = async (request) => {
+        let pf = [];
+        pf = pf.concat(
+            await axios.get(request, {
+                params: { competitionId: compId },
+            })
+        );
+        return pf;
+    };
+
+    const own = stockInfo
+        ? stockInfo.data.filter((stock) => pfList.includes(stock.ticker))
+        : null;
+    const notOwn = stockInfo
+        ? stockInfo.data.filter((stock) => !pfList.includes(stock.ticker))
+        : null;
 
     return (
-        <Container>
-            <ShowStocks>
-                <ShowStock/>
-            </ShowStocks>
-            <StockDetail>
-                <div>왼쪽에서 선택한 주식 타겟</div>
-                <div>삼성전자</div>
-                <div>+30%</div>
-                <div>70,000</div>
-            </StockDetail>
-            <Order>
-                <Toggle>
-                    <Item onClick={toggle_buy}>매수</Item>
-                    <Item onClick={toggle_sell}>매도</Item>
-                </Toggle>
-            {order === "buy" ? 
-            <Buy>
-                <div>
-                    현재가 70000 P
-                </div>
-                <div>
-                    수량
-                    <input>
-                    </input>
-                </div>
-                <div>
-                    거래가능 0
-                </div>
-                <div>
-                    매수총액 0
-                </div>
-                <button>
-                    매수
-                </button>
-            </Buy>:
-            <Sell>
-                <div>
-                    현재가 70000 P
-                </div>
-                <div>
-                    수량
-                    <input>
-                    </input>
-                </div>
-                <div>
-                    거래가능 0
-                </div>
-                <div>
-                    매도총액 0
-                </div>
-                <button>
-                    매도
-                </button>
-            </Sell>}
-            </Order>
-        </Container>
+        <>
+            <Container>
+                <Table>
+                    <thead>
+                        <th>단축코드</th>
+                        <th>회사명</th>
+                        <th>시가</th>
+                        <th>현재가</th>
+                        <th>전일대비</th>
+                    </thead>
+                    <tbody>
+                        {own &&
+                            own.map((stock, idx) => (
+                                <tr key={idx} onClick={() => setCompany(stock)}>
+                                    <td>{stock.ticker}</td>
+                                    <td>{stock.companyName}</td>
+                                    <td>{(stock.openPrice).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</td>
+                                    <td>{(stock.currentPrice).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</td>
+                                    <td
+                                        style={{
+                                            color:
+                                                stock.openPrice < stock.currentPrice
+                                                    ? "red"
+                                                    : stock.openPrice > stock.currentPrice
+                                                        ? "blue"
+                                                        : "black",
+                                        }}
+                                    >
+                                        {(stock.currentPrice - stock.openPrice).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                    </td>
+                                </tr>
+                            ))}
+                        {notOwn &&
+                            notOwn.map((stock, idx) => (
+                                <tr key={idx} onClick={() => setCompany(stock)}>
+                                    <td>{stock.ticker}</td>
+                                    <td>{stock.companyName}</td>
+                                    <td>{(stock.openPrice).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</td>
+                                    <td>{(stock.currentPrice).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</td>
+                                    <td
+                                        style={{
+                                            color:
+                                                stock.openPrice < stock.currentPrice
+                                                    ? "red"
+                                                    : stock.openPrice > stock.currentPrice
+                                                        ? "blue"
+                                                        : "black",
+                                        }}
+                                    >
+                                        {(stock.currentPrice - stock.openPrice).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                    </td>
+                                </tr>
+                            ))}
+                    </tbody>
+                </Table>
+            </Container>
+        </>
     );
 };
 
 export default Trade;
 
 const Container = styled.div`
-background-color: white;
-margin-top: 5vh;
-margin-bottom: 10vh;
-min-width: 1280px;
-max-width: 1280px;
-min-height: 720px;
-max-height: 720px;
-border: 1px solid rgba(0,0,0,0.1);
+margin: 1rem auto;
 display: flex;
-`
+justify-content: center;
+`;
 
-const ShowStocks = styled.span`
-overflow-y: scroll;
-width: 25%;
-`
-
-const StockDetail = styled.div`
-display: block;
-width: 35%;
-`
-
-const Order = styled.div`
-display: block;
-width: 40%;
-`
-
-const Buy = styled.div`
-`
-
-const Sell = styled.div`
-
-`
-
-const Toggle = styled.div`
-display: flex;
-justify-content: space-between;
-`
-
-const Item = styled.div`
-font-family: 'IBM Plex Sans KR', sans-serif;
-font-size: large;
-text-decoration: none;
-text-align: center;
-color: #0078ff;
-cursor: pointer;
-display: block;
-width: 49.5%;
-background-color: white;
-border: 1px solid #0078ff;
-:first-child{
-    color: red;
-    border: 1px solid red;
+const Table = styled.table`
+border-collapse: collapse;
+td,th {
+    padding: 8px;
 }
-`
+tr {
+// 드래그 금지
+-webkit-user-select:none;
+-moz-user-select:none;
+-ms-user-select:none;
+user-select:none;
+cursor: pointer;
+:hover{
+  background-color: rgba(0,0,0,0.1);
+  }
+}
+`;

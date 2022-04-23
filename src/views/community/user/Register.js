@@ -6,6 +6,7 @@ import styled, { css } from "styled-components/macro";
 export const Register = ({ showRegister, setShowRegister }) => {
 
     const [register, setRegister] = useState({ userid: "", password: "", nickname: "" });
+    const BACK_URL = `http://${window.location.hostname}:8081`
 
     const getRegister = () => {
         // console.log(register);
@@ -16,14 +17,16 @@ export const Register = ({ showRegister, setShowRegister }) => {
         } else if (register.nickname === "") {
             alert("닉네임을 적어주세요")
         } else {
-            axios.post('http://localhost:8080/api/user/register', {
+            axios.post(BACK_URL + '/api/v1/user/register', {
                 userid: register.userid,
                 password: register.password,
                 nickname: register.nickname,
             }).then((res) => {
 
                 if (res.data.userid === register.userid){
-                    window.location.replace("/community");
+                    setShowRegister(false);
+                    alert("회원가입 성공")
+                    // window.location.replace("/community");
                 } else if (res.data.errors[0].message === "userid must be unique") {
                     alert("해당 아이디는 이미 존재합니다.")
                 } else if (res.data.errors[0].message === "nickname must be unique") {

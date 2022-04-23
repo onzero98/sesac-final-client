@@ -1,23 +1,28 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components/macro";
 import parse from 'html-react-parser';
 import Comment from "../comment/Comment";
 import moment from "moment";
 import 'moment/locale/ko'
+import axios from "axios";
+axios.defaults.withCredentials = true;
 
 function Article() {
 
     // /article/ 제거한 param 값
+    let navigate = useNavigate();
     const id = window.location.pathname.substring(19);
     const [userProfile, setUserProfile] = useState([]);
     const [contents, setContents] = useState([]);
+    const BACK_URL = `${window.location.hostname}:8081`
 
     useLayoutEffect(() => {
         async function refresh() {
             const { data } = await Promise.resolve(getProfile());
             setUserProfile({
-                nickname: data.nickname,
+                // nickname: data.nickname,
+                nickname: data,
             })
         }
         refresh();
@@ -39,17 +44,17 @@ function Article() {
     }, []);
 
     const getProfile = async () => {
-        return await axios.get("http://localhost:8080/api/user/userinfo");
+        return await axios.get(BACK_URL + "/api/v1/user/userinfo");
     };
 
     const getData = async () => {
-        return await axios.get(`http://localhost:8080/api/v1/article/${id}`);
+        return await axios.get(BACK_URL + `/api/v1/article/${id}`);
     };
 
     const deletePost = async () => {
-        await axios.delete(`http://localhost:8080/api/v1/article/?id=${id}`);
+        await axios.delete(BACK_URL + `/api/v1/article/?id=${id}`);
         alert("삭제되었음!");
-        window.location.replace("/community");
+        navigate("/community");
     }
 
     return (

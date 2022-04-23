@@ -1,23 +1,26 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import axios from "axios";
 import styled, {css} from "styled-components/macro";
 import moment from "moment";
 import 'moment/locale/ko'
+import axios from "axios";
+axios.defaults.withCredentials = true;
 
 const Search = () => {
 
+    const id = window.location.hostname;
     const [searchParams] = useSearchParams();
     const keyword = searchParams.get("search");
     let [pageNum, setPageNum] = useState(0);
     const [max, setMax] = useState(0);
     let [totals, setTotals] = useState([]);
+    const BACK_URL = `${window.location.hostname}:8081`
 
     // 최초 게시글 불러오기
     useLayoutEffect(() => {
         async function refresh() {
-            console.log(keyword)
-            const { data } = await axios.get(`http://localhost:8080/api/v1/topic/${keyword}/?page=${pageNum}&size=10`);
+            // console.log(keyword)
+            const { data } = await axios.get(BACK_URL + `/api/v1/topic/${keyword}/?page=${pageNum}&size=10`);
             setMax(Math.ceil(data.count/10));
             setTotals(data.rows);
         }
@@ -26,9 +29,9 @@ const Search = () => {
 
     useEffect(() => {
         async function refresh() {
-            await axios.get(`http://localhost:8080/api/v1/topic/${keyword}/?page=${pageNum}&size=10`)
+            await axios.get(BACK_URL + `/api/v1/topic/${keyword}/?page=${pageNum}&size=10`)
                 .then((res) => {
-                    console.log(res.data.rows);
+                    // console.log(res.data.rows);
                     setTotals(res.data.rows);
                 })
         }
@@ -57,6 +60,7 @@ const Search = () => {
 
     return (
         <SiteView>
+            {console.log(id)}
             <Box>
                 <h1>{keyword === "all" ? "전체" : keyword} 게시판</h1>
                 <TableSize>

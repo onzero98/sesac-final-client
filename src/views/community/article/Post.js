@@ -1,15 +1,18 @@
 import React, { useState, useEffect, } from "react";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import '@ckeditor/ckeditor5-build-classic/build/translations/ko.js';
 import styled from "styled-components/macro";
 import './CKEdit.css';
+import axios from "axios";
+axios.defaults.withCredentials = true;
 
 function Post() {
-
+    let navigate = useNavigate();
     const [post, setPost] = useState({ title: "", content: "", tags: "" });
     const [topics, setTopics] = useState([]);
+    const BACK_URL = `${window.location.hostname}:8081`
 
     useEffect(() => {
         async function refresh() {
@@ -20,7 +23,7 @@ function Post() {
     }, []);
 
     const getTopics = async () => {
-        return await axios.get(`http://localhost:8080/api/v1/topic`);
+        return await axios.get(BACK_URL + `/api/v1/topic`);
     };
 
     const getPost = () => {
@@ -33,14 +36,14 @@ function Post() {
             alert("주제를 선택")
         }
         else {
-            axios.post('http://localhost:8080/api/v1/article', {
+            axios.post(BACK_URL + '/api/v1/article', {
                 title: post.title,
                 content: post.content,
                 tags: post.tags,
             }).then((res) => {
                 console.log(res);
                 if (res.data.title === post.title){
-                    window.location.replace("/community");
+                    navigate("/community");
                 } else if (res.data.original.code === "ER_DATA_TOO_LONG") {
                     alert("제목이 너무 깁니다. 30자 이내.")
                 }
@@ -146,5 +149,5 @@ border: none;
 border-radius: 2px;
 background-color: #0078ff;
 color: white;
-/* font-weight: bold; */
+cursor: pointer;
 `

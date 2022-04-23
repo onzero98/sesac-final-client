@@ -1,11 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 import styled from "styled-components/macro";
 
-const TradeLogs = ({ logs, getAccount }) => {
-  // console.log(logs);
+const TradeLogs = ({ backAPI }) => {
+  const logsAPI = backAPI + "/logs";
+  const [logs, setLogs] = useState([]);
+  let params = window.location.pathname.substring(6);
+
+  useEffect(() => {
+    let isMounted = true;
+    getLogs(logsAPI)
+      .then((response) => response[0].data)
+      .then((data) => {
+        if (isMounted) setLogs(data);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const getLogs = async (request) => {
+    let logs = [];
+    logs = logs.concat(
+      await axios.get(request, {
+        params: { competitionId: params },
+      })
+    );
+    return logs;
+  };
   return (
     <Container>
-      <table>
+      <Table>
         <thead>
           <tr>
             <th>Log ID</th>
@@ -20,30 +46,35 @@ const TradeLogs = ({ logs, getAccount }) => {
           </tr>
         </thead>
         <tbody>
-          {logs.map((log) => (
-            <tr key={log.id}>
-              <td>{log.id}</td>
-              <td style={{ color: log.buying ? "red" : "blue" }}>
-                {log.buying ? "매수" : "매도"}
-              </td>
-              <td>{log.ticker}</td>
-              <td>{log.companyName}</td>
-              <td>{log.buyingPrice}</td>
-              <td>{log.sellingPrice}</td>
-              <td>{log.amount}</td>
-              <td
-                style={{
-                  color:
-                    log.profit > 0 ? "red" : log.profit < 0 ? "blue" : "black",
-                }}
-              >
-                {log.profit}
-              </td>
-              <td>{log.createdTime}</td>
-            </tr>
-          ))}
+          {logs &&
+            logs.map((log) => (
+              <tr key={log.id}>
+                <td>{log.id}</td>
+                <td style={{ color: log.buying ? "red" : "blue" }}>
+                  {log.buying ? "매수" : "매도"}
+                </td>
+                <td>{log.ticker}</td>
+                <td>{log.companyName}</td>
+                <td>{log.buyingPrice}</td>
+                <td>{log.sellingPrice}</td>
+                <td>{log.amount}</td>
+                <td
+                  style={{
+                    color:
+                      log.profit > 0
+                        ? "red"
+                        : log.profit < 0
+                        ? "blue"
+                        : "black",
+                  }}
+                >
+                  {log.profit}
+                </td>
+                <td>{log.createdTime}</td>
+              </tr>
+            ))}
         </tbody>
-      </table>
+      </Table>
     </Container>
   );
 };
@@ -51,13 +82,17 @@ const TradeLogs = ({ logs, getAccount }) => {
 export default TradeLogs;
 
 const Container = styled.div`
-background-color: white;
-margin-top: 5vh;
-margin-bottom: 10vh;
-min-width: 1280px;
-max-width: 1280px;
-min-height: 720px;
-max-height: 720px;
-border: 1px solid rgba(0,0,0,0.1);
-display: flex;
-`
+  margin: 1rem auto;
+  width: 80%;
+  display: flex;
+  justify-content: center;
+`;
+
+const Table = styled.table`
+  border: 1px solid;
+  td,
+  th {
+    padding: 5px;
+    border: 1px solid;
+  }
+`;

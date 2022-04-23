@@ -1,11 +1,13 @@
 import React, { useState, useEffect,useLayoutEffect } from "react";
-import axios from "axios";
 import styled, {css} from "styled-components/macro";
 import { Link } from "react-router-dom";
+import axios from "axios";
+axios.defaults.withCredentials = true;
 
 function MyPage() {
 
     const [userProfile, setUserProfile] = useState([]);
+    const BACK_URL = `http://${window.location.hostname}:8081`
 
     useLayoutEffect(() => {
         async function refresh() {
@@ -13,15 +15,16 @@ function MyPage() {
             const { data } = await Promise.resolve(getProfile());
             console.log(data);
             setUserProfile({
-                nickname: data.nickname,
-                points: data.points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+                nickname: data,
+                // nickname: data.nickname,
+                // points: data.points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','),
             })
         }
         refresh();
     }, []);
 
     const getProfile = async () => {
-        return await axios.get("http://localhost:8080/api/user/userinfo");
+        return await axios.get(BACK_URL + "/api/v1/user/userinfo");
     };
 
     return (
@@ -29,10 +32,10 @@ function MyPage() {
             <MyBox>
                 <InfosAlign>
                     <p><InfoNickname>{userProfile.nickname}</InfoNickname> 님</p>
-                    <p><InfoPoints>{userProfile.points}</InfoPoints> P</p>
+                    {/* <p><InfoPoints>{userProfile.points}</InfoPoints> P</p> */}
                 </InfosAlign>
                 <ButtonAlign>
-                    <Line />
+                    {/* <Line /> */}
                     <PostButton to={"/community/post"}>글쓰기</PostButton>
                 </ButtonAlign>
             </MyBox>

@@ -1,9 +1,10 @@
 import React, { useState, useEffect,useLayoutEffect } from "react";
-import axios from "axios";
 import styled, { css } from "styled-components/macro";
 import loginCheck from "../../../utils/loginCheck";
 import moment from "moment";
 import 'moment/locale/ko'
+import axios from "axios";
+axios.defaults.withCredentials = true;
 
 function Comment() {
 
@@ -12,6 +13,7 @@ function Comment() {
 
     const [comments, setComments] = useState([]);
     const [post, setPost] = useState({content:"",});
+    const BACK_URL = `${window.location.hostname}:8081`
 
     useEffect(() => {
         async function refresh() {
@@ -22,7 +24,7 @@ function Comment() {
     }, []);
 
     const getComment = async () => {
-        return await axios.get(`http://localhost:8080/api/comment/get/${id}`);
+        return await axios.get(BACK_URL + `/api/v1/comment/${id}`);
     };
 
     const getPost = async() => {
@@ -36,7 +38,7 @@ function Comment() {
         if(post.content === ""){
             alert("내용을 입력하세요.")
         } else {
-            axios.post('http://localhost:8080/api/comment/post', {
+            axios.post(BACK_URL + '/api/v1/comment', {
                 articleid: id,
                 content: post.content,
             }).then((res) => {
@@ -51,7 +53,7 @@ function Comment() {
     return (
         <Display>
             <Line/>
-            <Title>댓글</Title>
+            <Title>댓글{console.log(comments)}</Title>
             {comments.map((comment, idx) => (
                 <CommentBox key={idx}>
                     <div>

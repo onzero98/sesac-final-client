@@ -1,26 +1,30 @@
 import React, { useState, useEffect, } from "react";
 import axios from "axios";
 import styled from "styled-components/macro";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const Login = ({ showLogin, setShowLogin }) => {
-
+    
+    let navigate = useNavigate();
     const [login, setLogin] = useState({ userid: "", password: "", });
+    const BACK_URL = `${window.location.hostname}:8081`
 
     const getLogin = () => {
-        axios.post('http://localhost:8080/api/user/login', {
+        axios.post(BACK_URL + '/api/v1/user/login', {
             userid: login.userid,
             password: login.password,
         }).then((res) => {
             // 로컬스토리지에 저장후, 모든 페이지에 Header 에 삽입
+            // console.log(res.data);
             const token = res.data.token;
             localStorage.setItem('accessToken', token);
 
             if (token) {
-                window.location.reload();
+                setShowLogin(false);
+                navigate(0);
+                // window.location.reload();
             } else {
                 alert("로그인 실패")
-                window.location.reload();
             }
         });
     };

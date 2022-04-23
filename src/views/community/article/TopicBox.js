@@ -1,17 +1,19 @@
 import React, { useState, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import styled from "styled-components/macro";
+import axios from "axios";
+axios.defaults.withCredentials = true;
 
 const TopicBox = () => {
 
     const [totals, setTotals] = useState([]);
     const [setTagsTitle, SetTagsTitle] = useState([]);
+    const BACK_URL = `http://${window.location.hostname}:8081`
 
     // 전체 게시글 불러오기
     useLayoutEffect(() => {
         async function refresh() {
-            const { data } = await axios.get("http://localhost:8080/api/v1/article/tags/all");
+            const { data } = await axios.get(BACK_URL +"/api/v1/article/tags/all");
             setTotals(data);
         }
         refresh();
@@ -22,10 +24,10 @@ const TopicBox = () => {
         async function refresh() {
             var orderBy = [];
 
-            const { data } = await axios.get("http://localhost:8080/api/v1/topic");
+            const { data } = await axios.get(BACK_URL + "/api/v1/topic");
 
             for(var i in data){
-                var title = await axios.get(`http://localhost:8080/api/v1/article/tags/${data[i].tags}`);
+                var title = await axios.get(BACK_URL + `/api/v1/article/tags/${data[i].tags}`);
                 orderBy.push(title.data);
             }
             SetTagsTitle(orderBy);
