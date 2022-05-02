@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKERHUB_USERNAME = "dev210"
-        APP_NAME = "monkey-client"
+        APP_NAME = "monkey-test"
         IMAGE_NAME = "${DOCKERHUB_USERNAME}" + "/" + "${APP_NAME}"
     }
 
@@ -37,12 +37,6 @@ pipeline {
                         docker_image.push("latest")
                     }
                 }
-            }
-        }
-
-        stage('Update GitOps Repo') {
-            steps {
-                build job: 'updateManifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
             }
         }
     }
